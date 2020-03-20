@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import datadog.opentracing.DDSpanContext
 import datadog.opentracing.SpanFactory
+import datadog.trace.common.sampling.RateByServiceSampler
 import datadog.trace.common.writer.ddagent.DDAgentApi
 import datadog.trace.common.writer.ddagent.DDAgentResponseListener
 import datadog.trace.util.test.DDSpecification
@@ -99,11 +100,14 @@ class DDAgentApiTest extends DDSpecification {
     traces                                                                 | expectedRequestBody
     []                                                                     | []
     [[SpanFactory.newSpanOf(1L).setTag("service.name", "my-service")]]     | [[new TreeMap<>([
-      "duration" : 0,
+      "duration" : 10,
       "error"    : 0,
       "meta"     : ["thread.name": Thread.currentThread().getName(), "thread.id": "${Thread.currentThread().id}"],
-      //TODO : use DDSpanContext.DD_MEASURED as a key
-      "metrics"  : ["_dd.measured": DDSpanContext.DD_MEASURED_DEFAULT],
+      "metrics"  : [
+        (DDSpanContext.DD_MEASURED)               : DDSpanContext.DD_MEASURED_DEFAULT,
+        (RateByServiceSampler.SAMPLING_AGENT_RATE): 1.0,
+        (DDSpanContext.PRIORITY_SAMPLING_KEY)     : 1,
+      ],
       "name"     : "fakeOperation",
       "parent_id": 0,
       "resource" : "fakeResource",
@@ -114,10 +118,14 @@ class DDAgentApiTest extends DDSpecification {
       "type"     : "fakeType"
     ])]]
     [[SpanFactory.newSpanOf(100L).setTag("resource.name", "my-resource")]] | [[new TreeMap<>([
-      "duration" : 0,
+      "duration" : 10,
       "error"    : 0,
       "meta"     : ["thread.name": Thread.currentThread().getName(), "thread.id": "${Thread.currentThread().id}"],
-      "metrics"  : ["_dd.measured": DDSpanContext.DD_MEASURED_DEFAULT],
+      "metrics"  : [
+        (DDSpanContext.DD_MEASURED)               : DDSpanContext.DD_MEASURED_DEFAULT,
+        (RateByServiceSampler.SAMPLING_AGENT_RATE): 1.0,
+        (DDSpanContext.PRIORITY_SAMPLING_KEY)     : 1,
+      ],
       "name"     : "fakeOperation",
       "parent_id": 0,
       "resource" : "my-resource",
@@ -127,6 +135,13 @@ class DDAgentApiTest extends DDSpecification {
       "trace_id" : 1,
       "type"     : "fakeType"
     ])]]
+
+    ignore = traces.each {
+      it.each {
+        it.finish()
+        it.@durationNano.set(10)
+      }
+    }
   }
 
   def "Api ResponseListeners see 200 responses"() {
