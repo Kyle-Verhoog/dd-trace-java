@@ -264,6 +264,12 @@ class DDAgentApiTest extends DDSpecification {
   }
 
   static List<List<TreeMap<String, Object>>> convertList(byte[] bytes) {
-    return mapper.readValue(bytes, new TypeReference<List<List<TreeMap<String, Object>>>>() {})
+    def traces = mapper.readValue(bytes, new TypeReference<List<List<TreeMap<String, Object>>>>() {})
+    traces.each {
+      it.each {
+        it["meta"]?.remove("slow.stack")
+      }
+    }
+    return traces
   }
 }
