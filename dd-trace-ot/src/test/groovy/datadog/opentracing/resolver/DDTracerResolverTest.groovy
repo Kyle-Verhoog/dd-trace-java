@@ -1,6 +1,7 @@
 package datadog.opentracing.resolver
 
-import datadog.opentracing.DDTracer
+import datadog.opentracing.resolver.DDTracerResolver
+import datadog.trace.DDTracer
 import datadog.trace.api.Config
 import datadog.trace.util.test.DDSpecification
 import io.opentracing.contrib.tracerresolver.TracerResolver

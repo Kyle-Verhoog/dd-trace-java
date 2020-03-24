@@ -1,5 +1,5 @@
-import datadog.opentracing.DDSpan
-import datadog.opentracing.DDTracer
+import datadog.trace.DDSpan
+import datadog.trace.DDTracer
 import datadog.trace.common.writer.ListWriter
 import datadog.trace.util.test.DDSpecification
 import io.opentracing.Tracer
