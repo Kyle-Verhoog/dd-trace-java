@@ -1,8 +1,8 @@
 package datadog.trace.common.processor.rule;
 
 import datadog.trace.DDSpan;
+import datadog.trace.bootstrap.instrumentation.api.Tags;
 import datadog.trace.common.processor.TraceProcessor;
-import io.opentracing.tag.Tags;
 import java.util.Collection;
 import java.util.Map;
 
@@ -16,14 +16,14 @@ public class ErrorRule implements TraceProcessor.Rule {
   @Override
   public void processSpan(
       final DDSpan span, final Map<String, Object> tags, final Collection<DDSpan> trace) {
-    if (tags.containsKey(Tags.ERROR.getKey())) {
-      final Object value = tags.get(Tags.ERROR.getKey());
+    if (tags.containsKey(Tags.ERROR)) {
+      final Object value = tags.get(Tags.ERROR);
       if (value instanceof Boolean) {
         span.setError((Boolean) value);
       } else {
         span.setError(Boolean.parseBoolean(value.toString()));
       }
-      span.setTag(Tags.ERROR, null); // Remove the tag
+      span.removeTag(Tags.ERROR);
     }
   }
 }

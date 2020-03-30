@@ -2,10 +2,10 @@ package datadog.trace.common.processor
 
 import datadog.trace.SpanFactory
 import datadog.trace.agent.test.utils.ConfigUtils
+import datadog.trace.bootstrap.instrumentation.api.Tags
 import datadog.trace.common.processor.rule.Status404Rule
 import datadog.trace.common.processor.rule.URLAsResourceNameRule
 import datadog.trace.util.test.DDSpecification
-import io.opentracing.tag.Tags
 import spock.lang.Subject
 
 class TraceProcessorTest extends DDSpecification {
@@ -84,10 +84,10 @@ class TraceProcessorTest extends DDSpecification {
   def "resource name set with url path #url to #resourceName"() {
     setup:
     if (method) {
-      Tags.HTTP_METHOD.set(span, method)
+      span.setTag(Tags.HTTP_METHOD, method)
     }
-    Tags.HTTP_URL.set(span, url)
-    Tags.HTTP_STATUS.set(span, status)
+    span.setTag(Tags.HTTP_URL, url)
+    span.setTag(Tags.HTTP_STATUS, status)
 
     when:
     processor.onTraceComplete(trace)
