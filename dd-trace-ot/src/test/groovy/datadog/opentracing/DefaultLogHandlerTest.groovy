@@ -1,6 +1,9 @@
-package datadog.trace
+package datadog.opentracing
 
-
+import datadog.opentracing.DefaultLogHandler
+import datadog.opentracing.LogHandler
+import datadog.trace.DDSpan
+import datadog.trace.DDTracer
 import datadog.trace.api.DDTags
 import datadog.trace.common.writer.ListWriter
 import datadog.trace.util.test.DDSpecification

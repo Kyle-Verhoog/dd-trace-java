@@ -1,8 +1,9 @@
-package datadog.trace;
+package datadog.opentracing;
 
 import static io.opentracing.log.Fields.ERROR_OBJECT;
 import static io.opentracing.log.Fields.MESSAGE;
 
+import datadog.trace.DDSpan;
 import datadog.trace.api.DDTags;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,8 @@ public class DefaultLogHandler implements LogHandler {
   }
 
   @Override
-  public void log(final long timestampMicroseconds, final Map<String, ?> fields, final DDSpan span) {
+  public void log(
+      final long timestampMicroseconds, final Map<String, ?> fields, final DDSpan span) {
     extractError(fields, span);
     log.debug("`log` method is not implemented. Doing nothing");
   }

@@ -1,5 +1,6 @@
-package datadog.trace;
+package datadog.opentracing;
 
+import datadog.trace.DDSpan;
 import java.util.Map;
 
 public interface LogHandler {
