@@ -1,7 +1,5 @@
 package datadog.opentracing
 
-import datadog.opentracing.DefaultLogHandler
-import datadog.opentracing.LogHandler
 import datadog.trace.DDSpan
 import datadog.trace.DDTracer
 import datadog.trace.api.DDTags

@@ -6,7 +6,6 @@ import datadog.trace.PendingTrace
 import datadog.trace.api.sampling.PrioritySampling
 import datadog.trace.common.writer.ListWriter
 import datadog.trace.util.test.DDSpecification
-import io.opentracing.propagation.TextMapInjectAdapter
 
 import static datadog.trace.DDTracer.TRACE_ID_MAX
 import static datadog.trace.propagation.HaystackHttpCodec.OT_BAGGAGE_PREFIX
@@ -47,7 +46,7 @@ class HaystackHttpInjectorTest extends DDSpecification {
     final Map<String, String> carrier = Mock()
 
     when:
-    injector.inject(mockedContext, new TextMapInjectAdapter(carrier))
+    injector.inject(mockedContext, carrier, MapSetter.INSTANCE)
 
     then:
     1 * carrier.put(TRACE_ID_KEY, traceId.toString())

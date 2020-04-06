@@ -51,7 +51,7 @@ class TraceProcessorTest extends DDSpecification {
 
   def "set 404 as a resource on a 404 issue"() {
     setup:
-    Tags.HTTP_STATUS.set(span, 404)
+    span.setTag(Tags.HTTP_STATUS, 404)
 
     when:
     processor.onTraceComplete(trace)
@@ -62,7 +62,7 @@ class TraceProcessorTest extends DDSpecification {
 
   def "status #status code error=#error"() {
     setup:
-    Tags.HTTP_STATUS.set(span, status)
+    span.setTag(Tags.HTTP_STATUS, status)
 
     when:
     processor.onTraceComplete(trace)
