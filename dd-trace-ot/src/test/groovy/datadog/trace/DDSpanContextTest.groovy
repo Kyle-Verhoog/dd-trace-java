@@ -1,18 +1,22 @@
 package datadog.trace
 
+
 import datadog.opentracing.DDSpanContext
 import datadog.opentracing.SpanFactory
 import datadog.trace.api.DDTags
+import datadog.trace.common.sampling.RateByServiceSampler
 import datadog.trace.util.test.DDSpecification
 
 class DDSpanContextTest extends DDSpecification {
 
   def "null values for tags delete existing tags"() {
     setup:
-    def context = SpanFactory.newSpanOf(0).context
+    def span = SpanFactory.newSpanOf(0)
+    def context = span.context
     context.setTag("some.tag", "asdf")
     context.setTag(name, null)
     context.setErrorFlag(true)
+    span.finish()
 
     expect:
     context.getTags() == tags
@@ -54,8 +58,10 @@ class DDSpanContextTest extends DDSpecification {
 
   def "tags can be added to the context"() {
     setup:
-    def context = SpanFactory.newSpanOf(0).context
+    def span = SpanFactory.newSpanOf(0)
+    def context = span.context
     context.setTag(name, value)
+    span.finish()
     def thread = Thread.currentThread()
 
     expect:
@@ -103,6 +109,10 @@ class DDSpanContextTest extends DDSpecification {
   }
 
   static String defaultMetrics() {
-    return DDSpanContext.DEFAULT_METRICS
+    return [
+      (RateByServiceSampler.SAMPLING_AGENT_RATE): 1.0,
+      (DDSpanContext.DD_MEASURED)               : DDSpanContext.DD_MEASURED_DEFAULT,
+      (DDSpanContext.PRIORITY_SAMPLING_KEY)     : 1,
+    ]
   }
 }
