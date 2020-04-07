@@ -2,8 +2,6 @@ package datadog.trace
 
 
 import datadog.trace.api.DDTags
-import datadog.trace.DDSpanContext
-import datadog.trace.SpanFactory
 import datadog.trace.common.sampling.RateByServiceSampler
 import datadog.trace.util.test.DDSpecification
 
